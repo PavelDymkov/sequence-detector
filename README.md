@@ -24,7 +24,7 @@ const {
 
 const controlManager = new SequenceManager();
 
-const run = ["ArrowRight", timeout(500), "ArrowRight"];
+const run = ["ArrowRight", timeout(200), "ArrowRight"];
 
 controlManager.add("run", run);
 controlManager.add("specialAttack", [...run, "Space"]);

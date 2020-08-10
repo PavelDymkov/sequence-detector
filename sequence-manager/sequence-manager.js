@@ -1,28 +1,38 @@
-const EventEmitter = require("events");
+const EventEmitter = require("eventemitter3");
+
 const { createSequenceDetector, timeout } = require("../index");
 
-class SequenceManager extends EventEmitter {
-    constructor() {
-        super();
+function SequenceManager() {
+    if (this instanceof SequenceManager === false) return null;
 
-        this._sequenceList = [];
-    }
+    EventEmitter.call(this);
 
-    add(name, sequence) {
-        this._sequenceList.push({
-            name,
-            sequenceDetector: createSequenceDetector(sequence),
-        });
-    }
-
-    push(value) {
-        this._sequenceList.forEach(item => {
-            if (item.sequenceDetector(value)) {
-                this.emit(item.name);
-            }
-        });
-    }
+    this._sequenceList = [];
 }
+
+SequenceManager.prototype = Object.create(EventEmitter.prototype, {
+    constructor: {
+        value: SequenceManager,
+    },
+
+    add: {
+        value: function add(name, sequence) {
+            this._sequenceList.push({
+                name,
+                sequenceDetector: createSequenceDetector(sequence),
+            });
+        },
+    },
+    push: {
+        value: function push(value) {
+            this._sequenceList.forEach(item => {
+                if (item.sequenceDetector(value)) {
+                    this.emit(item.name);
+                }
+            });
+        },
+    },
+});
 
 exports.SequenceManager = SequenceManager;
 exports.timeout = timeout;

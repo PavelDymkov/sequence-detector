@@ -68,4 +68,15 @@ describe("createSequenceDetector tests", () => {
         value = await deferred(() => sequenceDetector(2));
         assert.equal(value, false);
     });
+
+    it("function in sequence", () => {
+        const sequenceDetector = createSequenceDetector([
+            item => item.x === "x1" && item.y === "y2",
+        ]);
+
+        assert.equal(sequenceDetector({ x: "x1", y: "y1" }), false);
+        assert.equal(sequenceDetector({ x: "x1", y: "y2" }), true);
+        assert.equal(sequenceDetector({ x: "x2", y: "y1" }), false);
+        assert.equal(sequenceDetector({ x: "x2", y: "y1" }), false);
+    });
 });

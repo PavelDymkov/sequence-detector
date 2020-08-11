@@ -1,4 +1,5 @@
 var isArray = require("isarray");
+var isFunction = require("is-function");
 var not = require("logical-not");
 
 function createSequenceDetector(sequence) {
@@ -24,7 +25,7 @@ function createSequenceDetector(sequence) {
             timestamp = null;
         }
 
-        if (sequence[i] === value) {
+        if (isEqual(sequence[i], value)) {
             if (i === lastIndex) {
                 i = 0;
 
@@ -70,6 +71,10 @@ function preprocess(sequence) {
     }
 
     return sequence.length > 0 ? sequence : null;
+}
+
+function isEqual(target, source) {
+    return isFunction(target) ? target(source) : target === source;
 }
 
 function timeout(ms) {
